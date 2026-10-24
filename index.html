@@ -156,7 +156,7 @@ footer{margin:60px 0 0;padding:26px 22px;text-align:center;color:var(--mut);font
 <script>
 /* ====== CONFIG: set this to your Flask backend URL ====== */
 const LOCAL = ["localhost","127.0.0.1",""].includes(location.hostname);
-const API = (location.protocol === "file:" || (LOCAL && location.port !== "5000")) ? "http://localhost:5000" : "";
+const API = LOCAL ? "http://localhost:5000" : "https://YOUR-NAME.onrender.com";
 /* ======================================================== */
 const $ = id => document.getElementById(id);
 const TRUSTED = ["the hindu","reuters","bbc","ndtv","times of india","indian express","hindustan times","ap news","the guardian"];
