@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>credo | Check the story</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0ebe7;--panel:#fff;--panel2:#f6f2ee;--line:#e4ded8;--tx:#111;--mut:#6f6a66;--acc:#ff6a3d;--good:#1fa463;--bad:#e5484d;--warn:#b97a00}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.6 "Plus Jakarta Sans","Segoe UI",system-ui,sans-serif}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400}
+nav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:14px 22px}
+.logo{width:60px;height:60px;border-radius:50%;background:var(--acc);display:grid;place-items:center;color:#111;font-weight:800;text-decoration:none;font-size:15px}
+.brand{font-weight:800;font-size:26px;letter-spacing:-.03em}.brand span{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400}
+.acct{display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+.who{background:#fff;border-radius:99px;padding:9px 16px;font-size:14px;display:none}
+.pill{font-size:11px;padding:5px 11px;border-radius:99px;background:#fff;color:var(--mut)}.pill.live{color:var(--good)}
+.dark{background:#111;color:#fff;border:0;border-radius:99px;padding:12px 24px;font-weight:700}
+.dark:hover{background:#2b2b2b}.dark:disabled{opacity:.55;cursor:wait}
+.soft{background:#e9e5e1;color:#111;border:0;border-radius:99px;padding:12px 26px;font-weight:700}
+.soft:hover{background:#dfdad5}
+.ghost{background:transparent;color:var(--tx);border:1px solid var(--line);border-radius:99px;padding:6px 12px;font-size:12px}
+.ghost:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:920px;margin:0 auto;padding:26px 20px 0}
+h1{font-weight:800;font-size:clamp(38px,6.5vw,62px);line-height:1.05;letter-spacing:-.035em;margin:30px 0 12px;text-align:center}
+h1 em{font-size:1.08em;letter-spacing:-.01em}
+.sub{text-align:center;color:var(--mut);margin:0 0 34px;font-size:16px}
+.card{background:var(--panel);border-radius:28px;padding:30px;box-shadow:0 14px 40px rgba(60,40,20,.08);margin-bottom:22px}
+.card h3{margin:0 0 4px;font-size:18px}
+label{font-weight:700;font-size:14px;display:block;margin-bottom:14px}
+textarea{width:100%;height:230px;border:1px solid var(--line);border-radius:18px;padding:16px;font:inherit;color:var(--tx);resize:vertical;background:#fff}
+textarea:focus,input:focus{outline:2px solid rgba(255,106,61,.35);border-color:var(--acc)}
+::placeholder{color:#8d8782}
+#count{text-align:right;color:var(--mut);font-size:13px;margin:8px 0 14px}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+#banner{display:none;margin-top:16px;font-size:13px;color:var(--warn);background:#fff6e0;border-radius:12px;padding:10px 14px}
+.placeholder{text-align:center;color:var(--mut);padding:26px;border:1px dashed var(--line);border-radius:16px}
+.res-top{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.big{font-size:54px;font-weight:800;line-height:1}
+.verdict{display:inline-block;padding:4px 14px;border-radius:99px;font-size:12px;font-weight:800;margin:8px 0 4px;letter-spacing:.04em;color:#fff}
+.count{color:var(--mut);font-size:13px}
+.meter .l{display:flex;justify-content:space-between;font-size:13px;color:var(--mut);margin-top:16px}
+.track{height:10px;background:#ece6e0;border-radius:6px;overflow:hidden;margin-top:6px;position:relative}
+.track::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:#bbb}
+.fill{height:100%;width:0;border-radius:6px;transition:width .9s ease}
+.srcgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:10px}
+.src{display:block;padding:14px 16px;background:var(--panel2);border:1px solid transparent;border-radius:16px;text-decoration:none;transition:.15s}
+.src:hover{border-color:var(--acc);transform:translateY(-2px)}
+.src b{font-size:14px}.src p{margin:6px 0;font-size:13px;color:#444}.src small{color:var(--mut);font-size:11px;word-break:break-all}
+.badge{font-size:10px;padding:2px 8px;border-radius:99px;margin-left:8px;background:#e9e5e1;color:var(--mut);font-weight:700}
+.badge.t{background:#dff5e8;color:var(--good)}.badge.f{background:#fff0c9;color:var(--warn)}
+.hi{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 14px;background:var(--panel2);border-radius:14px;margin-top:8px;cursor:pointer}
+.hi:hover{outline:1px solid var(--acc)}.hi span{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hi small{color:var(--mut);white-space:nowrap}
+.linkbtn{background:none;border:0;color:var(--mut);font-size:12px;text-decoration:underline;padding:0}
+#know{margin:70px 0 0}
+h2{text-align:center;font-weight:800;font-size:clamp(32px,5vw,48px);letter-spacing:-.03em;margin:0 0 22px;line-height:1.1}
+h2 em{color:var(--acc);font-size:1.08em}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:800px){.steps{grid-template-columns:1fr 1fr}nav{grid-template-columns:auto 1fr}.brand{display:none}}
+.step{background:#fff;border-radius:22px;padding:22px}
+.step b{color:var(--acc);font-size:13px}.step h4{margin:8px 0 6px;font-size:17px}.step p{margin:0;color:var(--mut);font-size:13.5px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:700px){.two{grid-template-columns:1fr}}
+.two .card{margin:0;padding:24px;border-radius:22px}.two ul{margin:8px 0 0;padding-left:18px;color:var(--mut);font-size:14px}
+.note{margin-top:14px;padding:20px 24px;background:#fff6e0;border-radius:22px;color:#7a5a00;font-size:14px}
+footer{margin:60px 0 0;padding:26px 22px;text-align:center;color:var(--mut);font-size:13px}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;place-items:center;z-index:60;padding:20px}
+#modal.open{display:grid}#modal .card{width:100%;max-width:400px;margin:0}
+#modal input{width:100%;padding:13px 16px;border:1px solid var(--line);border-radius:14px;font:inherit;margin:12px 0}
+#merr{color:var(--bad);font-size:13px;min-height:18px}
+#fab{position:fixed;right:22px;bottom:22px;width:60px;height:60px;border-radius:50%;background:var(--acc);color:#fff;border:0;box-shadow:0 10px 30px rgba(255,106,61,.45);z-index:40;display:grid;place-items:center}
+#chat{position:fixed;right:22px;bottom:96px;width:380px;max-width:calc(100vw - 32px);height:540px;max-height:calc(100vh - 120px);background:#fff;border-radius:24px;display:none;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(60,40,20,.25);z-index:40}
+#chat.open{display:flex}
+.ch{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--panel2)}
+.ch b{font-size:15px}.ch small{display:block;font-size:11px}
+.ch button{background:none;border:0;color:var(--mut);font-size:22px}
+#msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.m{max-width:88%;padding:10px 14px;border-radius:16px;background:var(--panel2);font-size:14px;border-bottom-left-radius:4px}
+.m.u{align-self:flex-end;background:#111;color:#fff;border-bottom-left-radius:16px;border-bottom-right-radius:4px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 10px;max-height:92px;overflow-y:auto}
+#cf{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+#ci{flex:1;border:1px solid var(--line);border-radius:99px;padding:10px 16px;font:inherit}
+#cf button{background:#111;color:#fff;border:0;border-radius:99px;padding:0 18px;font-weight:700}
+.news{display:flex;flex-direction:column;gap:8px;width:100%}
+.ni{background:var(--panel2);border-radius:14px;padding:11px 13px}
+.ni a{font-size:13.5px;font-weight:700;text-decoration:none;display:block;line-height:1.4}.ni a:hover{color:var(--acc)}
+.ni .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0 8px;font-size:11.5px;color:var(--mut)}.ni .meta .badge{margin:0}
+.ni .ghost{padding:4px 11px}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="#top" aria-label="Home">check</a>
+  <div class="brand">cred<span>o</span></div>
+  <div class="acct"><span class="pill" id="mode">checking…</span><span class="who" id="who"></span><button class="dark" id="authbtn">Log in</button></div>
+</nav>
+
+<main id="top">
+  <h1>Check the <em>story</em></h1>
+  <p class="sub">Paste the text you want checked. Takes a few seconds.</p>
+
+  <div class="card">
+    <label for="claim">News paragraph, post or message</label>
+    <textarea id="claim" maxlength="12000" placeholder="Paste the article text, a social media post, or a forwarded message here…"></textarea>
+    <div id="count">0 / 12,000</div>
+    <div class="btns"><button class="dark" id="check">Analyze credibility</button><button class="soft" id="clear">Clear</button></div>
+    <div id="banner">Backend not reachable. Showing DEMO results from a simple in-browser heuristic.</div>
+  </div>
+
+  <div id="outwrap" style="display:none">
+    <div class="card"><h3>Credibility report</h3><div class="count" style="margin-bottom:14px">Green above 50%, red at or below 50%.</div><div id="result"></div></div>
+    <div class="card"><h3>Sources &amp; references</h3><div class="count">Open each link to read the original coverage and verify for yourself.</div><div id="sources"></div></div>
+  </div>
+
+  <div class="card" id="histcard" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center"><h3>Recent checks</h3><button class="linkbtn" id="histclear">Clear history</button></div>
+    <div id="hist"></div>
+  </div>
+
+  <section id="know">
+    <h2>Good to <em>know</em></h2>
+    <div class="steps">
+      <div class="step"><b>01</b><h4>Paste</h4><p>Add a news paragraph, post or forwarded message.</p></div>
+      <div class="step"><b>02</b><h4>Style score</h4><p>An ML model (TF-IDF + Logistic Regression, 44,000+ articles, 98% test accuracy) rates how much the writing resembles real news.</p></div>
+      <div class="step"><b>03</b><h4>Source check</h4><p>We search Google News for trusted outlets and fact-checkers.</p></div>
+      <div class="step"><b>04</b><h4>Verdict</h4><p>You get a score, a verdict and links to verify.</p></div>
+    </div>
+    <div class="two">
+      <div class="card"><h3 style="color:var(--good)">Signs of real news</h3><ul><li>Named sources ("officials said")</li><li>Specific dates and numbers</li><li>Neutral, factual tone</li></ul></div>
+      <div class="card"><h3 style="color:var(--bad)">Signs of fake news</h3><ul><li>ALL CAPS and "!!!"</li><li>"SHOCKING", "share this"</li><li>Vague claims, no named source</li></ul></div>
+    </div>
+    <div class="note"><b>Limitations:</b> this tool checks writing style and source presence, not factual truth. The model was trained on US political news from 2016-17, so style scores are less reliable for other topics and countries. "Unverified" does not mean fake: new or local news may not be indexed yet. It is a first-level filter and does not replace human fact-checking.</div>
+  </section>
+</main>
+<footer>credo · Built by Team WEB FORGE AI · Always verify with the original source.</footer>
+
+<div id="modal"><div class="card">
+  <h3>Log in</h3><div class="count">Enter your email to save your recent checks on this device.</div>
+  <input id="em" type="email" placeholder="you@example.com" autocomplete="email"><div id="merr"></div>
+  <div class="btns"><button class="dark" id="emok">Continue</button><button class="soft" id="emx">Cancel</button></div>
+</div></div>
+
+<button id="fab" aria-label="Open assistant"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></button>
+<div id="chat">
+  <div class="ch"><div><b>News Assistant</b><small id="cmode">● Checking…</small></div><button id="x">×</button></div>
+  <div id="msgs"></div>
+  <div class="chips" id="chips"></div>
+  <form id="cf"><input id="ci" placeholder="Ask about fake news…" autocomplete="off"><button>Send</button></form>
+</div>
+
+<script>
+/* ====== CONFIG: set this to your Flask backend URL ====== */
+const LOCAL = ["localhost","127.0.0.1",""].includes(location.hostname);
+const API = (location.protocol === "file:" || (LOCAL && location.port !== "5000")) ? "http://localhost:5000" : "";
+/* ======================================================== */
+const $ = id => document.getElementById(id);
+const TRUSTED = ["the hindu","reuters","bbc","ndtv","times of india","indian express","hindustan times","ap news","the guardian"];
+const FACT = ["alt news","boom","snopes","factly","pib fact check"];
+let demo = false;
+
+async function analyze(text){
+  try{
+    const r = await fetch(API+"/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});
+    if(!r.ok) throw 0; demo=false; return await r.json();
+  }catch(e){ demo=true; return demoAnalyze(text); }
+}
+/* Backend JSON: {style_score, source_score, credibility (0-100), verdict, sources:[{title,url,outlet,type}]} */
+function demoAnalyze(t){
+  let s=70;
+  s-=(t.match(/\b[A-Z]{4,}\b/g)||[]).length*8+(t.match(/!/g)||[]).length*6;
+  if(/shocking|share this|you won't believe|secret|miracle/i.test(t)) s-=25;
+  if(/said|officials|according to|announced|\d/.test(t)) s+=12;
+  s=Math.max(3,Math.min(97,s));
+  const sources=s>50?[{title:"Related coverage (demo)",url:"https://www.thehindu.com",outlet:"The Hindu",type:"trusted"},{title:"Related coverage (demo)",url:"https://www.reuters.com",outlet:"Reuters",type:"trusted"}]:[];
+  const src=sources.length>=2?95:sources.length?75:20;
+  return {style_score:s,source_score:src,credibility:Math.round(s*.5+src*.5),verdict:sources.length>=2?"REAL":sources.length?"LIKELY REAL":s<40?"LIKELY FAKE":"UNVERIFIED",sources};
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const color=v=>v>50?"var(--good)":"var(--bad)";
+
+function render(d){
+  $("outwrap").style.display="block";
+  const cred=Math.round(d.credibility), col=color(cred), circ=2*Math.PI*54;
+  const bar=(label,v)=>`<div class="l"><span>${label}</span><span>${Math.round(v)}%</span></div><div class="track"><div class="fill" data-w="${v}" style="background:${color(v)}"></div></div>`;
+  $("result").innerHTML=`
+  <div class="res-top">
+    <svg width="140" height="140" viewBox="0 0 140 140">
+      <circle cx="70" cy="70" r="54" fill="none" stroke="#ece6e0" stroke-width="14"/>
+      <circle id="ring" cx="70" cy="70" r="54" fill="none" stroke="${col}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${circ}" transform="rotate(-90 70 70)" style="transition:stroke-dashoffset .9s ease"/>
+      <text x="70" y="79" text-anchor="middle" fill="${col}" font-size="28" font-weight="800">${cred}%</text>
+    </svg>
+    <div><div class="big" style="color:${col}">${cred}%</div>
+    <span class="verdict" style="background:${col};color:#fff">${esc(d.verdict)}</span>
+    <div class="count">${cred>50?"Looks more credible":"Looks less credible"}</div></div>
+  </div>
+  <div class="meter">${bar("Writing style (resembles real news)",d.style_score)}${bar("Source trust",d.source_score)}${bar("Overall credibility",cred)}</div>
+  <button class="ghost" id="askres" style="margin-top:18px;padding:8px 14px">💬 Ask the assistant about this result</button>`;
+  $("askres").onclick=()=>ask("Explain my result");
+  requestAnimationFrame(()=>{
+    $("ring").style.strokeDashoffset=circ*(1-cred/100);
+    document.querySelectorAll(".fill").forEach(f=>f.style.width=f.dataset.w+"%");
+  });
+  const s=d.sources||[];
+  $("sources").innerHTML=s.length?`<div class="srcgrid">`+s.map(x=>{
+    const o=(x.outlet||"").toLowerCase();
+    const type=x.type||(FACT.some(f=>o.includes(f))?"factcheck":TRUSTED.some(t=>o.includes(t))?"trusted":"other");
+    const b=type==="trusted"?'<span class="badge t">Trusted</span>':type==="factcheck"?'<span class="badge f">Fact-checker</span>':'<span class="badge">Other</span>';
+    return `<a class="src" href="${esc(x.url)}" target="_blank" rel="noopener"><b>${esc(x.outlet||"Source")}</b>${b}<p>${esc(x.title||"")}</p><small>${esc(x.url)} ↗</small></a>`;
+  }).join("")+`</div>`:'<div class="placeholder" style="min-height:110px">No trusted sources found. "Unverified" does not mean fake: new or local news may not be indexed yet.</div>';
+  $("banner").style.display=demo?"block":"none"; setMode();
+}
+function setMode(){const m=$("mode");m.textContent=demo?"demo mode":"live backend";m.className="pill"+(demo?"":" live");}
+
+$("claim").oninput=()=>$("count").textContent=fmtCount($("claim").value.length);
+$("check").onclick=async()=>{
+  const t=$("claim").value.trim(); if(!t){$("claim").focus();return;}
+  $("check").disabled=true;$("check").textContent="Analyzing…";
+  const d=await analyze(t); last={text:t,result:d}; render(d); setChips(); saveHist(t,d); $("outwrap").scrollIntoView({behavior:"smooth",block:"start"});
+  $("check").disabled=false;$("check").textContent="Analyze credibility";
+};
+
+/* ---- Chatbot (context-aware) ---- */
+let last=null; const hist=[];
+const fmt=s=>esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\n/g,"<br>");
+function add(role,text){const d=document.createElement("div");d.className="m"+(role==="user"?" u":"");d.innerHTML=fmt(text);$("msgs").appendChild(d);$("msgs").scrollTop=1e9;return d;}
+function ask(q){$("chat").classList.add("open");$("ci").value=q;$("cf").requestSubmit();}
+function flags(t){
+  const f=[],caps=t.match(/\b[A-Z]{4,}\b/g)||[],bait=t.match(/shocking|share this|you won't believe|miracle|secret|they don't want you|forward this|100% (true|real)/gi)||[];
+  if(caps.length)f.push("ALL-CAPS words ("+[...new Set(caps)].slice(0,4).join(", ")+")");
+  if(t.includes("!"))f.push("exclamation marks");
+  if(bait.length)f.push("clickbait wording ("+[...new Set(bait.map(x=>x.toLowerCase()))].slice(0,3).join(", ")+")");
+  if(!/said|according to|officials|announced|told|reported|statement/i.test(t))f.push("no named or attributed source");
+  if(!/\d/.test(t))f.push("no specific dates or numbers");
+  return f;
+}
+const MEAN={"REAL":"two or more trusted outlets are covering this story","LIKELY REAL":"one trusted outlet is covering it","DISPUTED":"a fact-checker has covered this claim, so read their verdict first","LIKELY FAKE":"no sources were found and the wording looks like fake news","UNVERIFIED":"no trusted source was found (this does not mean it is fake; new or local news may not be indexed yet)"};
+const NEED="Run a check first: paste an article in the analyzer and press **Analyze credibility**. Then I can explain the result, point out red flags and suggest how to verify it.";
+function explain(){
+  if(!last)return NEED;
+  const r=last.result,c=Math.round(r.credibility),sc=r.sources||[],tr=sc.filter(x=>x.type==="trusted").length,fc=sc.filter(x=>x.type==="factcheck").length;
+  return `**Verdict: ${r.verdict} (${c}%)**\nMeaning: ${MEAN[r.verdict]||"see the source links below the report"}.\n• Writing style: ${Math.round(r.style_score)}% similar to real news\n• Sources: ${sc.length} found (${tr} trusted, ${fc} fact-checker)\nThis checks style and source presence, not factual truth, so please open the links to confirm.`;
+}
+function redFlags(){
+  if(!last)return NEED;
+  const f=flags(last.text);
+  return f.length?"**Red flags in your text:**\n"+f.map(x=>"• "+x).join("\n")+"\nThese are common in misleading posts, but one flag alone doesn't prove anything.":"I didn't find the usual red flags (caps, clickbait words, missing attribution, missing numbers). That's a good sign for the writing, but still verify the facts with the sources.";
+}
+function verify(){
+  const sc=last?(last.result.sources||[]):[];
+  const first=sc.length?"1. Open the top source link and compare names, numbers and dates with your text.":"1. No sources were found: search the key names and places on The Hindu, Reuters, BBC or NDTV. It may be too new or local.";
+  return "**How to verify this:**\n"+first+"\n2. Check the publish date (old stories get re-shared as new).\n3. Reverse-search any image (Google Lens / TinEye).\n4. Search Alt News, BOOM or Snopes for the same claim.\n5. Find the original source, not a screenshot or forward.";
+}
+function localReply(q){
+  const l=q.toLowerCase();
+  if(/result|score|verdict|explain|why|percent|%|credib/.test(l)&&!/how (does|do) (this|the) tool/.test(l))return explain();
+  if(/red flag|suspicious|my text|wrong with|clickbait|pattern/.test(l))return redFlags();
+  if(/verify|confirm|check (if|this|it)|next step|what (should|can) i do|share/.test(l))return verify();
+  if(/how.*(work|tool)/.test(l))return "You paste an article and press Check. An ML model scores how much the writing resembles real news, we search Google News, and check for trusted outlets and fact-checkers. You get a score, a verdict and links to verify.";
+  if(/spot|fake|sign|identify/.test(l))return "**Fake news often has:** ALL CAPS, '!!!', words like SHOCKING or 'share this', vague claims, emotional language and no named source.\n**Real news usually has:** named sources, specific dates and numbers, and a neutral tone.";
+  if(/unverified/.test(l))return "Unverified does not mean fake. It means no trusted source was found, which can happen with new or local news. Try the verification steps: just ask me \"how can I verify this?\"";
+  if(/accura|limit|reliab|trust.*tool/.test(l))return "The tool checks writing style and source presence, not factual truth. The model was trained on US political news from 2016-17, so it's less reliable for other topics and countries. Use it as a first filter, not a replacement for human fact-checking.";
+  if(/true or false|is it true|is this real|is this fake/.test(l))return "I can't say a story is definitely true or false. Run it through the analyzer and read the source links, then I can explain the result.";
+  return "I can help with news credibility: explaining your result, spotting red flags, verifying a story, or how this tool works. You can also paste a full article here and I'll run the check for you.";
+}
+async function reply(q){
+  hist.push({role:"user",content:q});
+  const ctx=last?{text:last.text.slice(0,1500),result:{verdict:last.result.verdict,credibility:last.result.credibility,style_score:last.result.style_score,source_score:last.result.source_score,sources:(last.result.sources||[]).slice(0,6).map(x=>({outlet:x.outlet,title:x.title,type:x.type}))}}:null;
+  try{
+    const r=await fetch(API+"/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:q,history:hist.slice(-8),context:ctx})});
+    if(!r.ok)throw 0; return (await r.json()).reply;
+  }catch(e){return localReply(q);}
+}
+$("cf").onsubmit=async e=>{
+  e.preventDefault();const q=$("ci").value.trim();if(!q)return;
+  $("ci").value="";add("user",q);
+  const ni=newsIntent(q);
+  if(ni==="pick"){add("bot","Sure! Which category would you like?");setChips("news");return;}
+  if(ni){await getNews(ni,false);return;}
+  if(q.length>140){ /* looks like an article: run the analyzer */
+    $("claim").value=q.slice(0,12000);$("count").textContent=fmtCount($("claim").value.length);
+    add("bot","That looks like an article, so I ran the analyzer on it.");
+    await $("check").onclick(); add("bot",explain()); return;
+  }
+  const t=add("bot","…");
+  const a=await reply(q);hist.push({role:"assistant",content:a});t.innerHTML=fmt(a);$("msgs").scrollTop=1e9;
+};
+const CATS=[["top","🔥 Top"],["politics","🏛 Political"],["sports","🏅 Sports"],["world","🌍 International"],["india","🇮🇳 India"],["business","💼 Business"],["technology","💻 Technology"],["entertainment","🎬 Entertainment"],["science","🔬 Science"],["health","🩺 Health"]];
+function setChips(mode){
+  const box=$("chips");box.innerHTML="";
+  const mk=(t,fn)=>{const b=document.createElement("button");b.className="ghost";b.textContent=t;b.onclick=fn;box.appendChild(b);};
+  if(mode==="news"){mk("← Back",()=>setChips());CATS.forEach(c=>mk(c[1],()=>getNews(c[0])));return;}
+  (last?["Explain my result","What red flags are in my text?","How can I verify this?"]:["How does this tool work?","How to spot fake news?","What does Unverified mean?"]).forEach(t=>mk(t,()=>ask(t)));
+  mk("📰 Get news",()=>{$("chat").classList.add("open");add("bot","Pick a category and I'll bring the latest headlines, with the source and how old each story is.");setChips("news");});
+}
+function ageStr(iso){
+  const m=Math.max(0,Math.round((Date.now()-new Date(iso))/60000));
+  if(m<1)return "just now"; if(m<60)return m+" min ago";
+  const h=Math.round(m/60); if(h<24)return h+(h===1?" hour":" hours")+" ago";
+  const d=Math.round(h/24); return d+(d===1?" day":" days")+" ago";
+}
+function addNews(items){
+  const w=document.createElement("div");w.className="news";
+  items.forEach(x=>{
+    const c=document.createElement("div"),h=(Date.now()-new Date(x.published))/36e5;c.className="ni";
+    const badge=x.type==="trusted"?'<span class="badge t">Trusted</span>':x.type==="factcheck"?'<span class="badge f">Fact-checker</span>':"";
+    c.innerHTML=`<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a><div class="meta"><span>📰 ${esc(x.outlet)}</span>${badge}<span style="color:${h<6?"var(--good)":h<48?"var(--mut)":"var(--warn)"}">🕒 ${ageStr(x.published)}${h>=48?" (older story)":""}</span></div><button class="ghost">Analyze credibility</button>`;
+    c.querySelector("button").onclick=()=>checkItem(x.title);
+    w.appendChild(c);
+  });
+  $("msgs").appendChild(w);$("msgs").scrollTop=1e9;
+}
+async function checkItem(title){
+  $("claim").value=title;$("count").textContent=fmtCount(title.length);
+  add("bot","Checking: “"+title+"”");
+  await $("check").onclick(); add("bot",explain());
+}
+async function getNews(cat,echo=true){
+  const label=(CATS.find(c=>c[0]===cat)||[0,cat])[1], plain=label.replace(/^\S+\s/,"");
+  if(echo)add("user","Get news: "+label);
+  const t=add("bot","Fetching the latest "+plain+" news…");
+  try{
+    const r=await fetch(API+"/news?category="+encodeURIComponent(cat)+"&limit=6");
+    if(!r.ok){let m="";try{m=(await r.json()).detail}catch(_){} throw m||0;}
+    const d=await r.json();
+    if(!d.items||!d.items.length){t.innerHTML=fmt("I couldn't find fresh "+plain+" stories right now. Try another category.");return;}
+    t.innerHTML=fmt("Latest **"+plain+"** headlines, newest first. Tap a headline to read the source, or press **Analyze credibility** to run it through the analyzer.");
+    addNews(d.items);
+  }catch(e){t.innerHTML=fmt(typeof e==="string"&&e?"The news source didn't respond ("+e+"). Check your internet connection and try again.":"I couldn't reach the backend. Start it with **python app.py** and open **http://localhost:5000**.");}
+}
+function newsIntent(q){
+  if(q.length>140||!/\b(news|headlines?)\b/i.test(q)||!/\b(get|show|give|latest|top|today|current|recent|breaking|headlines?|update)/i.test(q)||/fake|spot|verify|credib|detect|real or/i.test(q))return null;
+  const m=[["politics",/politic|election|parliament|government|minister/i],["sports",/sport|cricket|football|ipl|match/i],["world",/international|world|global/i],["india",/india|national/i],["business",/business|market|econom|financ/i],["technology",/tech|gadget|\bai\b/i],["entertainment",/entertain|movie|bollywood|film/i],["science",/science|space/i],["health",/health|medical/i]];
+  for(const [c,re] of m)if(re.test(q))return c;
+  return "pick";
+}
+let warned=false;
+$("fab").onclick=()=>{$("chat").classList.toggle("open");$("ci").focus();
+  if(demo&&!warned&&$("chat").classList.contains("open")){warned=true;add("bot","⚠️ I can't reach the backend, so **news** and **AI answers** are unavailable. Start it with **python app.py**, then open **http://localhost:5000**.");}};
+$("x").onclick=()=>$("chat").classList.remove("open");
+add("bot","Hi! I'm your news credibility assistant. Check an article in the analyzer and I'll explain the result, point out red flags and help you verify it. Tap **Get news** for the latest headlines with sources and their age.");
+setChips();
+fetch(API+"/health").then(r=>r.json()).then(d=>{demo=false;setMode();
+  $("cmode").textContent=d.llm?"● AI mode":"● Basic mode (no API key set)";$("cmode").style.color=d.llm?"var(--good)":"var(--warn)";
+}).catch(()=>{demo=true;setMode();$("cmode").textContent="● Backend offline";$("cmode").style.color="var(--bad)";});
+</script>
+<script>
+const fmtCount=n=>n.toLocaleString("en-US")+" / 12,000";
+const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+const user=()=>store.get("credo_user")||"";
+const HK=()=>"credo_hist_"+user();
+
+$("clear").onclick=()=>{
+  $("claim").value="";$("count").textContent=fmtCount(0);
+  $("result").innerHTML="";$("sources").innerHTML="";$("outwrap").style.display="none";$("banner").style.display="none";
+  last=null;setChips();$("claim").focus();
+};
+$("claim").addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")$("check").click();});
+
+function saveHist(t,d){
+  if(!user())return;
+  let a=[];try{a=JSON.parse(store.get(HK())||"[]")}catch(e){}
+  a.unshift({t:t.slice(0,3000),v:d.verdict,c:Math.round(d.credibility),ts:Date.now()});
+  store.set(HK(),JSON.stringify(a.slice(0,8)));drawHist();
+}
+function drawHist(){
+  let a=[];if(user()){try{a=JSON.parse(store.get(HK())||"[]")}catch(e){}}
+  $("histcard").style.display=a.length?"block":"none";
+  $("hist").innerHTML="";
+  a.forEach(x=>{
+    const d=document.createElement("div");d.className="hi";
+    d.innerHTML=`<span>${esc(x.t.slice(0,90))}</span><small style="color:${x.c>50?"var(--good)":"var(--bad)"};font-weight:700">${esc(x.v)} · ${x.c}% · ${ageStr(new Date(x.ts).toISOString())}</small>`;
+    d.onclick=()=>{$("claim").value=x.t;$("count").textContent=fmtCount(x.t.length);window.scrollTo({top:0,behavior:"smooth"});$("claim").focus();};
+    $("hist").appendChild(d);
+  });
+}
+$("histclear").onclick=()=>{store.del(HK());drawHist();};
+
+function drawAuth(){
+  const u=user();$("who").style.display=u?"inline-block":"none";$("who").textContent=u;
+  $("authbtn").textContent=u?"Log out":"Log in";drawHist();
+}
+function closeModal(){$("modal").classList.remove("open");$("merr").textContent="";}
+$("authbtn").onclick=()=>{
+  if(user()){store.del("credo_user");drawAuth();}
+  else{$("modal").classList.add("open");$("em").value="";$("em").focus();}
+};
+function login(){
+  const v=$("em").value.trim();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){$("merr").textContent="Please enter a valid email address.";return;}
+  store.set("credo_user",v);closeModal();drawAuth();
+}
+$("emok").onclick=login;$("emx").onclick=closeModal;
+$("em").addEventListener("keydown",e=>{if(e.key==="Enter")login();if(e.key==="Escape")closeModal();});
+$("modal").addEventListener("click",e=>{if(e.target===$("modal"))closeModal();});
+drawAuth();
+</script>
+</body>
+</html>
